@@ -1,8 +1,7 @@
 import React from "react";
 import "./style.css";
 
-const StationDesign = (image, color, name, url) => {
-  console.log(name);
+const StationDesign = ({ image, color, name, url }) => {
   return (
     <div className="radio-box" style={{ backgroundColor: `#${color}` }}>
       <div className="radio-image">

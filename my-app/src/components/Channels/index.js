@@ -9,7 +9,8 @@ const URL = "http://api.sr.se/api/v2/channels?format=json&size=100";
 const Station = () => {
   const [channels, setChannels] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [filterText, setFilterText] = useState("");
+  const [filteredText, setFilteredText] = useState("");
+  const [stationsToShow, setStationsToShow] = useState([]);
 
   useEffect(() => {
     setLoading(true);
@@ -22,33 +23,39 @@ const Station = () => {
       });
   }, []);
 
+  useEffect(
+    stationsToShow => {
+      let newStationsToShow = [];
+
+      if (filteredText.length > 0) {
+        newStationsToShow = channels.filter(radio => {
+          return radio.name.toUpperCase().includes(filteredText.toUpperCase());
+        });
+      } else {
+        newStationsToShow = channels;
+      }
+
+      if (stationsToShow !== newStationsToShow) {
+        setStationsToShow(newStationsToShow);
+      }
+    },
+    [channels, filteredText]
+  );
+
   const onFilterTextChange = evt => {
-    setFilterText(evt.target.value);
+    setFilteredText(evt.target.value);
   };
 
-  let stationsToShow = [];
+  if (stationsToShow.length > 0) {
+    const radios = stationsToShow.map(item => (
+      <StationDesign
+        image={item.image}
+        color={item.color}
+        name={item.name}
+        url={item.liveaudio.url}
+      />
+    ));
 
-  if (filterText.length > 0) {
-    stationsToShow = channels.filter(radio => {
-      if (radio.name.toUpperCase().includes(filterText.toUpperCase())) {
-        return setChannels(stationsToShow);
-      } else {
-        return false;
-      }
-    });
-  }
-
-  const radios = channels.map(item => (
-    <StationDesign
-      image={item.image}
-      color={item.color}
-      name={item.name}
-      url={item.liveaudio.url}
-    />
-  ));
-
-  if (channels.length > 0) {
-    console.log(radios);
     return (
       <div className="station-list">
         <div className="filter-bar">

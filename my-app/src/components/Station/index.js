@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import StationDesign from "../station-design";
+import StationDesign from "../Station-Design/index.js";
+
 import "./style.css";
 
 import loadingImage from "../../images/sverige.jpg";
@@ -18,35 +19,32 @@ const StationList = () => {
         return response.json();
       })
       .then(json => {
+        console.log(json.channels);
         setRadios(json.channels);
         setLoading(false);
       });
   }, []);
 
-  useEffect(() => {
-    onFilterTextChange();
-  }, [filterText]);
-
-  onFilterTextChange = evt => {
-    this.filterText = evt.target.value;
+  const onFilterTextChange = evt => {
+    setFilterText(evt.target.value);
     this.forceUpdate();
   };
 
   let stationsToShow = [];
 
-  if (this.filterText.length > 0) {
-    stationsToShow = this.state.radios.filter(radio => {
-      if (radio.name.toUpperCase().includes(this.filterText.toUpperCase())) {
+  if (filterText.length > 0) {
+    stationsToShow = radios.filter(radio => {
+      if (radio.name.toUpperCase().includes(filterText.toUpperCase())) {
         return true;
       } else {
         return false;
       }
     });
   } else {
-    stationsToShow = this.state.radios;
+    stationsToShow = radios;
   }
 
-  const radios = stationsToShow.map(radio => (
+  const radio = stationsToShow.map(radio => (
     <StationDesign
       name={radio.name}
       image={radio.image}
@@ -55,7 +53,7 @@ const StationList = () => {
     />
   ));
 
-  if (radios.length > 0) {
+  if (radio.length > 0) {
     return (
       <div className="station-list">
         <div className="filter-bar">
@@ -64,7 +62,7 @@ const StationList = () => {
             type="text"
             id="station-filter"
             placeholder="Search..."
-            onChange={this.onFilterTextChange}
+            onChange={onFilterTextChange}
           />
         </div>
 

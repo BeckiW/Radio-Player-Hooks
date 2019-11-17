@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import StationDesign from "../Station-Design";
 import loadingImage from "../../images/sverige.jpg";
+import "./style.css";
 
 const URL = "http://api.sr.se/api/v2/channels?format=json&size=100";
 
@@ -22,15 +23,14 @@ const Station = () => {
   }, []);
 
   const onFilterTextChange = evt => {
-    this.filterText = evt.target.value;
-    this.forceUpdate();
+    setFilterText(evt.target.value);
   };
 
   let stationsToShow = [];
 
   if (filterText.length > 0) {
     stationsToShow = channels.filter(radio => {
-      if (radio.name.toUpperCase().includes(this.filterText.toUpperCase())) {
+      if (radio.name.toUpperCase().includes(filterText.toUpperCase())) {
         return setChannels(stationsToShow);
       } else {
         return false;
@@ -48,6 +48,7 @@ const Station = () => {
   ));
 
   if (channels.length > 0) {
+    console.log(radios);
     return (
       <div className="station-list">
         <div className="filter-bar">
